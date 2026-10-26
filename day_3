@@ -1,0 +1,46 @@
+# day_three.py
+import json
+
+# 1. List Comprehensions (Clean, readable filtering/mapping in one line)
+# Imagine these are performance scores from an AI model evaluation
+raw_scores = [45, 88, 92, 30, 78, 95, 60]
+
+# Filter scores >= 80 (similar to a JS .filter() method)
+high_performers = [score for score in raw_scores if score >= 80]
+print(f"Original Scores: {raw_scores}")
+print(f"High Performers (>=80): {high_performers}")
+
+# 2. Working with JSON (Serialization and Deserialization)
+agent_config = {
+    "system_name": "MultiAgent-Core",
+    "provider": "Groq",
+    "temperature": 0.5,
+    "active_tools": ["search", "code_interpreter"]
+}
+
+# Convert Python dictionary to a formatted JSON string (Serialization)
+json_string = json.dumps(agent_config, indent=4)
+print("\n--- Serialized JSON String ---")
+print(json_string)
+
+# Convert JSON string back to a Python dictionary (Deserialization)
+parsed_data = json.loads(json_string)
+print(f"\nParsed Provider: {parsed_data['provider']}")
+
+# 3. File I/O (Reading and Writing Files safely using 'with')
+filename = "system_status.log"
+
+# Writing to a text file ('w' mode creates or overwrites the file)
+print(f"\n--- Writing to {filename} ---")
+with open(filename, "w") as file:
+    file.write("Timestamp: 2026-10-26\n")
+    file.write("Status: All agent frameworks operational.\n")
+
+# Reading from the text file ('r' mode reads the file)
+print(f"--- Reading from {filename} ---")
+with open(filename, "r") as file:
+    # readlines() loads all lines into a list
+    log_lines = file.readlines()
+    for line in log_lines:
+        # .strip() removes trailing newline characters
+        print(f"Log Entry -> {line.strip()}")
