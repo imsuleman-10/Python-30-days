@@ -1,0 +1,35 @@
+# day_four.py
+import asyncio
+import time
+
+# 1. Defining an asynchronous function (coroutine)
+async def fetch_agent_response(agent_name: str, delay: int):
+    print(f"[{agent_name}] Requesting data from model...")
+    
+    # Simulate network or LLM generation delay asynchronously (non-blocking)
+    await asyncio.sleep(delay)
+    
+    print(f"[{agent_name}] Response received after {delay} seconds!")
+    return f"Success payload from {agent_name}"
+
+# 2. Running multiple async tasks concurrently using asyncio.gather
+async def main():
+    start_time = time.time()
+    
+    print("--- Starting Concurrent Agent Requests ---")
+    
+    # Run three agents simultaneously instead of one by one
+    results = await asyncio.gather(
+        fetch_agent_response("CodingAgent", 2),
+        fetch_agent_response("SEOAgent", 1),
+        fetch_agent_response("OverseerAgent", 3)
+    )
+    
+    end_time = time.time()
+    
+    print(f"\nAll responses collected: {results}")
+    print(f"Total execution time: {end_time - start_time:.2f} seconds (Notice it took ~3s, not 6s!)")
+
+# Entry point to run the async main function in Python
+if __name__ == "__main__":
+    asyncio.run(main())
