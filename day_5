@@ -1,0 +1,58 @@
+# day_five.py
+import os
+import json
+import urllib.request
+import urllib.error
+
+# 1. Handling Environment Variables & Configuration
+# In real projects, you load these from a .env file or system environment
+# Here we simulate setting an environment variable programmatically
+os.environ["AI_MODEL_KEY"] = "sk-mock-groq-key-12345"
+os.environ["APP_ENV"] = "development"
+
+# Fetching the environment variables safely using os.getenv
+api_key = os.getenv("AI_MODEL_KEY")
+app_env = os.getenv("APP_ENV", "production") # Default fallback if not found
+
+print(f"--- Environment Configuration ---")
+print(f"Current Environment: {app_env}")
+print(f"Loaded API Key: {api_key[:8]}...[HIDDEN]")
+
+# 2. Making a REST API Request using Built-in Libraries
+def fetch_public_data(url: str):
+    print(f"\n--- Fetching Data from API ---")
+    print(f"Target URL: {url}")
+    
+    try:
+        # Sending an HTTP GET request using urllib
+        with urllib.request.urlopen(url) as response:
+            # Check if status code is 200 (OK)
+            if response.status == 200:
+                # Read binary data and decode it to a UTF-8 string
+                raw_data = response.read().decode("utf-8")
+                
+                # Parse JSON string into a Python dictionary
+                parsed_json = json.loads(raw_data)
+                return parsed_json
+            else:
+                print(f"Failed with status code: {response.status}")
+                return None
+                
+    except urllib.error.URLError as e:
+        print(f"Network error occurred: {e.reason}")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return None
+
+# --- Execution Section ---
+# Using a public test API (JSONPlaceholder) to fetch dummy user data
+api_url = "https://jsonplaceholder.typicode.com/users/1"
+user_data = fetch_public_data(api_url)
+
+if user_data:
+    print("\n--- API Response Parsed Successfully ---")
+    print(f"User Name: {user_data.get('name')}")
+    print(f"Username: {user_data.get('username')}")
+    print(f"Email: {user_data.get('email')}")
+    print(f"City: {user_data.get('address', {}).get('city')}")
